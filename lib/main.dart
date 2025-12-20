@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'screens/splash_screen.dart';
 import 'screens/role_select_screen.dart';
 import 'screens/kid/kid_home_screen.dart';
-import 'screens/parent/parent_lock_screen.dart';
 import 'screens/parent/parent_home_screen.dart';
-import 'screens/school/school_login_screen.dart';
-import 'screens/school/school_home_screen.dart';
+import 'screens/parent/parent_lock_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,63 +19,55 @@ class ErmoKidsApp extends StatelessWidget {
     return MaterialApp(
       title: 'ErmoKids',
       debugShowCheckedModeBanner: false,
-
-      // 🔥 IMPORTANTE: Splash é a PRIMEIRA tela real
-      home: const SplashScreen(),
-
-      theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: const Color(0xFF2ECC71),
-        brightness: Brightness.light,
-      ),
-
-      // Rotas secundárias
+      theme: _kidsTheme(),
+      initialRoute: '/',
       routes: {
+        '/': (_) => const SplashScreen(),
         '/roles': (_) => const RoleSelectScreen(),
         '/kid': (_) => const KidHomeScreen(),
         '/parentLock': (_) => const ParentLockScreen(),
         '/parent': (_) => const ParentHomeScreen(),
-        '/schoolLogin': (_) => const SchoolLoginScreen(),
-        '/school': (_) => const SchoolHomeScreen(),
       },
+    );
+  }
+
+  ThemeData _kidsTheme() {
+    // Tema infantil: cores alegres, botões grandes, visual limpo
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.light,
+      colorSchemeSeed: const Color(0xFF4FC3F7),
+      scaffoldBackgroundColor: const Color(0xFFFFF8E1),
+      appBarTheme: const AppBarTheme(
+        centerTitle: true,
+        backgroundColor: Color(0xFF81D4FA),
+        foregroundColor: Colors.black,
+        elevation: 0,
+      ),
+      textTheme: const TextTheme(
+        headlineMedium: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+        titleLarge: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        bodyLarge: TextStyle(fontSize: 16),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFFFFD54F),
+          foregroundColor: Colors.black,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(22),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
+          textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+      ),
+      cardTheme: CardTheme(
+        color: Colors.white,
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      ),
     );
   }
 }
 
-/// Helpers simples para guardar PIN e dados mínimos offline.
-class LocalStore {
-  static const _pinKey = 'parent_pin';
-  static const _kidNameKey = 'kid_name';
-  static const _kidAgeKey = 'kid_age';
-
-  static Future<String> getParentPin() async {
-    final p = await SharedPreferences.getInstance();
-    return p.getString(_pinKey) ?? '1234';
-  }
-
-  static Future<void> setParentPin(String pin) async {
-    final p = await SharedPreferences.getInstance();
-    await p.setString(_pinKey, pin);
-  }
-
-  static Future<String> getKidName() async {
-    final p = await SharedPreferences.getInstance();
-    return p.getString(_kidNameKey) ?? 'Amiguinho';
-  }
-
-  static Future<int> getKidAge() async {
-    final p = await SharedPreferences.getInstance();
-    return p.getInt(_kidAgeKey) ?? 5;
-  }
-
-  static Future<void> setKidProfile({
-    required String name,
-    required int age,
-  }) async {
-    final p = await SharedPreferences.getInstance();
-    await p.setString(_kidNameKey, name);
-    await p.setInt(_kidAgeKey, age);
-  }
-}
 
 

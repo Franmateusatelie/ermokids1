@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../main.dart';
 
 class ParentLockScreen extends StatefulWidget {
   const ParentLockScreen({super.key});
@@ -9,23 +8,13 @@ class ParentLockScreen extends StatefulWidget {
 }
 
 class _ParentLockScreenState extends State<ParentLockScreen> {
-  final ctrl = TextEditingController();
-  String error = '';
+  final _c = TextEditingController();
+  String? error;
 
   @override
   void dispose() {
-    ctrl.dispose();
+    _c.dispose();
     super.dispose();
-  }
-
-  Future<void> check() async {
-    final pin = await LocalStore.getParentPin();
-    if (ctrl.text.trim() == pin) {
-      if (!mounted) return;
-      Navigator.pushReplacementNamed(context, '/parent');
-    } else {
-      setState(() => error = 'PIN incorreto.');
-    }
   }
 
   @override
@@ -33,32 +22,34 @@ class _ParentLockScreenState extends State<ParentLockScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Área dos Pais')),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(18),
         child: Column(
           children: [
-            const Text('Digite o PIN para entrar.'),
-            const SizedBox(height: 10),
+            const Text(
+              'Digite o PIN (padrão: 1234)',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 12),
             TextField(
-              controller: ctrl,
+              controller: _c,
               keyboardType: TextInputType.number,
               obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'PIN',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(18)),
+                hintText: 'PIN',
+                errorText: error,
               ),
-              onSubmitted: (_) => check(),
             ),
-            const SizedBox(height: 10),
-            if (error.isNotEmpty) Text(error, style: const TextStyle(color: Colors.red)),
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
             ElevatedButton(
-              onPressed: check,
+              onPressed: () {
+                if (_c.text.trim() == '1234') {
+                  Navigator.pushReplacementNamed(context, '/parent');
+                } else {
+                  setState(() => error = 'PIN incorreto');
+                }
+              },
               child: const Text('Entrar'),
-            ),
-            const SizedBox(height: 10),
-            TextButton(
-              onPressed: () => Navigator.pushNamedAndRemoveUntil(context, '/roles', (r) => false),
-              child: const Text('Voltar'),
             ),
           ],
         ),
@@ -66,3 +57,4 @@ class _ParentLockScreenState extends State<ParentLockScreen> {
     );
   }
 }
+
