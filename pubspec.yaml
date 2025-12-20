@@ -11,8 +11,16 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # 🎵 Músicas
   audioplayers: ^6.5.1
+
+  # ⭐ Progresso, estrelas, dados locais
   shared_preferences: ^2.5.4
+
+  # 🔔 Notificações (rotinas dos pais)
+  flutter_local_notifications: ^17.1.2
+
+  # 🍎 Ícones iOS (padrão Flutter)
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
@@ -27,3 +35,4 @@ flutter:
   assets:
     - assets/images/
     - assets/music/
+
