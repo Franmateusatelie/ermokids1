@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 
+import 'core/notification_service.dart';
+
 import 'screens/splash_screen.dart';
 import 'screens/role_select_screen.dart';
 import 'screens/kid/kid_home_screen.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // 🔔 Inicializa notificações (rotinas dos pais)
+  await NotificationService.init();
+
   runApp(const ErmoKidsApp());
 }
 
@@ -17,29 +23,12 @@ class ErmoKidsApp extends StatelessWidget {
     return MaterialApp(
       title: 'ErmoKids',
       debugShowCheckedModeBanner: false,
+
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF4CAF50),
           brightness: Brightness.light,
-        ),
-
-        /// ✅ CORREÇÃO IMPORTANTE
-        /// Flutter novo usa CardThemeData
-        cardTheme: const CardThemeData(
-          elevation: 6,
-          margin: EdgeInsets.all(12),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-          ),
-        ),
-
-        textTheme: const TextTheme(
-          headlineMedium: TextStyle(
-            fontSize: 26,
-            fontWeight: FontWeight.bold,
-          ),
-          bodyLarge: TextStyle(fontSize: 18),
         ),
       ),
 
@@ -52,8 +41,3 @@ class ErmoKidsApp extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
