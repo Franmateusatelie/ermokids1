@@ -34,7 +34,7 @@ class HomeScreen extends StatelessWidget {
                   child: const Text('Área dos Pais'),
                   onPressed: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => const ParentsScreen()));
+                        MaterialPageRoute(builder: (_) => ParentsScreen()));
                   },
                 ),
               ],

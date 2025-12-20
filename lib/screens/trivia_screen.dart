@@ -23,7 +23,6 @@ class _TriviaScreenState extends State<TriviaScreen> {
     {'q': 'Onde vivem os pássaros?', 'a': ['Na água', 'No céu', 'No chão'], 'c': 1},
     {'q': 'Qual é o nosso planeta?', 'a': ['Terra', 'Saturno', 'Lua'], 'c': 0},
     {'q': 'O que brilha à noite?', 'a': ['Sol', 'Estrelas', 'Árvore'], 'c': 1},
-
     {'q': 'Qual animal é rei da selva?', 'a': ['Leão', 'Cachorro', 'Peixe'], 'c': 0},
     {'q': 'Onde cresce a árvore?', 'a': ['Na terra', 'No mar', 'No céu'], 'c': 0},
     {'q': 'Qual animal vive na fazenda?', 'a': ['Vaca', 'Tubarão', 'Golfinho'], 'c': 0},
@@ -34,7 +33,6 @@ class _TriviaScreenState extends State<TriviaScreen> {
     {'q': 'Onde vivem os golfinhos?', 'a': ['No rio', 'No mar', 'Na floresta'], 'c': 1},
     {'q': 'Qual astro ilumina o dia?', 'a': ['Lua', 'Sol', 'Estrela'], 'c': 1},
     {'q': 'Qual animal gosta de banana?', 'a': ['Macaco', 'Cachorro', 'Peixe'], 'c': 0},
-
     {'q': 'Qual planeta é o mais quente?', 'a': ['Vênus', 'Marte', 'Netuno'], 'c': 0},
     {'q': 'Onde vivem os ursos polares?', 'a': ['Deserto', 'Polo Norte', 'Selva'], 'c': 1},
     {'q': 'O que cai do céu quando chove?', 'a': ['Areia', 'Água', 'Pedra'], 'c': 1},
@@ -49,10 +47,7 @@ class _TriviaScreenState extends State<TriviaScreen> {
 
   void answer(int i) {
     if (i == questions[index]['c']) score++;
-
-    setState(() {
-      selected = i;
-    });
+    setState(() => selected = i);
 
     Future.delayed(const Duration(seconds: 1), () {
       setState(() {
@@ -71,7 +66,7 @@ class _TriviaScreenState extends State<TriviaScreen> {
           child: Text(
             'Muito bem!\nPontuação: $score / ${questions.length}',
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 26),
+            style: const TextStyle(fontSize: 24),
           ),
         ),
       );
@@ -89,7 +84,25 @@ class _TriviaScreenState extends State<TriviaScreen> {
             Text(
               q['q'],
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-            for (int i = 0; i < 3; i++)
+
+            ...List.generate(3, (i) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: ElevatedButton(
+                  onPressed: selected == -1 ? () => answer(i) : null,
+                  child: Text(q['a'][i]),
+                ),
+              );
+            }),
+
+            const SizedBox(height: 20),
+            Text('Pergunta ${index + 1} de ${questions.length}'),
+          ],
+        ),
+      ),
+    );
+  }
+}
