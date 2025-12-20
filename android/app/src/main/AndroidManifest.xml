@@ -6,12 +6,11 @@
     <application
         android:label="ErmoKids"
         android:icon="@mipmap/ic_launcher"
-        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
-        <!-- 🔥 SPLASH COM VÍDEO (PRIMEIRA TELA) -->
+        <!-- SPLASH NATIVO COM VÍDEO -->
         <activity
             android:name=".SplashActivity"
             android:exported="true"
@@ -23,7 +22,7 @@
             </intent-filter>
         </activity>
 
-        <!-- FLUTTER MAIN ACTIVITY -->
+        <!-- FLUTTER ACTIVITY (EMBEDDING V2) -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -31,6 +30,11 @@
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode">
+
+            <!-- 🔥 ESSENCIAL PARA EMBEDDING V2 -->
+            <meta-data
+                android:name="flutterEmbedding"
+                android:value="2"/>
         </activity>
 
     </application>
