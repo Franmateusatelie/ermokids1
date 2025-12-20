@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../music/music_screen.dart';
+import '../create/paint_screen.dart';
 
 class KidHomeScreen extends StatelessWidget {
   const KidHomeScreen({super.key});
@@ -28,10 +29,20 @@ class KidHomeScreen extends StatelessWidget {
               );
             },
           ),
+          _MenuButton(
+            icon: Icons.palette,
+            label: 'Pintar',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const PaintScreen(),
+                ),
+              );
+            },
+          ),
           _MenuButton(icon: Icons.calculate, label: 'Matemática'),
           _MenuButton(icon: Icons.menu_book, label: 'Português'),
-          _MenuButton(icon: Icons.brush, label: 'Desenhar'),
-          _MenuButton(icon: Icons.palette, label: 'Pintar'),
           _MenuButton(icon: Icons.pets, label: 'Amiguinho'),
         ],
       ),
@@ -74,6 +85,7 @@ class _MenuButton extends StatelessWidget {
     );
   }
 }
+
 
 
 
