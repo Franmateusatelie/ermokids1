@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../music/music_screen.dart';
 
 class KidHomeScreen extends StatelessWidget {
   const KidHomeScreen({super.key});
@@ -11,40 +12,50 @@ class KidHomeScreen extends StatelessWidget {
         title: const Text('ErmoKids 🎈'),
         backgroundColor: Colors.blue,
       ),
-
       body: GridView.count(
         padding: const EdgeInsets.all(16),
         crossAxisCount: 2,
-        children: const [
-          KidMenuButton(icon: Icons.calculate, label: 'Matemática'),
-          KidMenuButton(icon: Icons.menu_book, label: 'Português'),
-          KidMenuButton(icon: Icons.brush, label: 'Desenhar'),
-          KidMenuButton(icon: Icons.palette, label: 'Pintar'),
-          KidMenuButton(icon: Icons.pets, label: 'Amiguinho'),
-          KidMenuButton(icon: Icons.music_note, label: 'Músicas'),
+        children: [
+          _MenuButton(
+            icon: Icons.music_note,
+            label: 'Músicas',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const MusicScreen(),
+                ),
+              );
+            },
+          ),
+          _MenuButton(icon: Icons.calculate, label: 'Matemática'),
+          _MenuButton(icon: Icons.menu_book, label: 'Português'),
+          _MenuButton(icon: Icons.brush, label: 'Desenhar'),
+          _MenuButton(icon: Icons.palette, label: 'Pintar'),
+          _MenuButton(icon: Icons.pets, label: 'Amiguinho'),
         ],
       ),
     );
   }
 }
 
-class KidMenuButton extends StatelessWidget {
+class _MenuButton extends StatelessWidget {
   final IconData icon;
   final String label;
+  final VoidCallback? onTap;
 
-  const KidMenuButton({
-    super.key,
+  const _MenuButton({
     required this.icon,
     required this.label,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.white,
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
-        onTap: () {},
+        onTap: onTap,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -63,5 +74,6 @@ class KidMenuButton extends StatelessWidget {
     );
   }
 }
+
 
 
