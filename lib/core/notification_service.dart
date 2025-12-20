@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationService {
@@ -5,23 +6,18 @@ class NotificationService {
       FlutterLocalNotificationsPlugin();
 
   static Future<void> init() async {
-    const AndroidInitializationSettings android =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-
-    const InitializationSettings settings =
-        InitializationSettings(android: android);
-
+    const android = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const settings = InitializationSettings(android: android);
     await _plugin.initialize(settings);
   }
 
-  static Future<void> scheduleNotification({
+  /// 🔔 Notificação simples (sem timezone, sem schedule)
+  static Future<void> showNotification({
     required int id,
     required String title,
     required String body,
-    required DateTime dateTime,
   }) async {
-    const AndroidNotificationDetails androidDetails =
-        AndroidNotificationDetails(
+    const androidDetails = AndroidNotificationDetails(
       'rotinas_channel',
       'Rotinas',
       channelDescription: 'Notificações de rotinas do ErmoKids',
@@ -29,15 +25,29 @@ class NotificationService {
       priority: Priority.high,
     );
 
-    await _plugin.schedule(
+    await _plugin.show(
       id,
       title,
       body,
-      dateTime,
       const NotificationDetails(android: androidDetails),
-      androidAllowWhileIdle: true,
     );
   }
+
+  /// ⏱️ Dispara notificação no horário escolhido (app aberto)
+  static void scheduleInApp({
+    required int id,
+    required String title,
+    required String body,
+    required DateTime dateTime,
+  }) {
+    final duration = dateTime.difference(DateTime.now());
+    if (duration.isNegative) return;
+
+    Timer(duration, () {
+      showNotification(id: id, title: title, body: body);
+    });
+  }
 }
+
 
 
