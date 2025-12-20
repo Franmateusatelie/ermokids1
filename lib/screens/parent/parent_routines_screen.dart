@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/notification_service.dart';
-import '../../core/star_manager.dart';
 
 class ParentRoutinesScreen extends StatefulWidget {
   const ParentRoutinesScreen({super.key});
@@ -15,7 +14,7 @@ class _ParentRoutinesScreenState extends State<ParentRoutinesScreen> {
   final TextEditingController _controller = TextEditingController();
   TimeOfDay? _time;
 
-  List<Map<String, dynamic>> routines = [];
+  List<Map<String, int>> routines = [];
 
   @override
   void initState() {
@@ -31,7 +30,6 @@ class _ParentRoutinesScreenState extends State<ParentRoutinesScreen> {
       routines = list.map((e) {
         final parts = e.split('|');
         return {
-          'title': parts[0],
           'hour': int.parse(parts[1]),
           'minute': int.parse(parts[2]),
         };
@@ -42,41 +40,36 @@ class _ParentRoutinesScreenState extends State<ParentRoutinesScreen> {
   Future<void> _save() async {
     final p = await SharedPreferences.getInstance();
     final list = routines
-        .map((r) => '${r['title']}|${r['hour']}|${r['minute']}')
+        .map((r) => '${_controller.text}|${r['hour']}|${r['minute']}')
         .toList();
     await p.setStringList('routines_v2', list);
   }
 
   Future<void> _addRoutine() async {
-    if (_controller.text.trim().isEmpty || _time == null) return;
-
-    final routine = {
-      'title': _controller.text.trim(),
-      'hour': _time!.hour,
-      'minute': _time!.minute,
-    };
-
-    routines.add(routine);
-    await _save();
+    if (_controller.text.isEmpty || _time == null) return;
 
     final now = DateTime.now();
     final date = DateTime(
       now.year,
       now.month,
       now.day,
-      routine['hour'],
-      routine['minute'],
+      _time!.hour,
+      _time!.minute,
     );
 
     await NotificationService.scheduleNotification(
-      id: routines.length,
-      title: '⏰ Hora da Rotina',
-      body: routine['title'],
+      id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+      title: '⏰ Hora da rotina',
+      body: _controller.text.trim(),
       dateTime: date,
     );
 
-    // ⭐ recompensa por rotina criada
-    await StarManager.addStars(1);
+    routines.add({
+      'hour': _time!.hour,
+      'minute': _time!.minute,
+    });
+
+    await _save();
 
     _controller.clear();
     _time = null;
@@ -85,36 +78,10 @@ class _ParentRoutinesScreenState extends State<ParentRoutinesScreen> {
   }
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('👨‍👩‍👧 Rotinas dos Pais'),
-        actions: [
-          FutureBuilder<int>(
-            future: StarManager.getStars(),
-            builder: (context, snapshot) {
-              final stars = snapshot.data ?? 0;
-              return Padding(
-                padding: const EdgeInsets.only(right: 16),
-                child: Center(
-                  child: Text(
-                    '⭐ $stars',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              );
-            },
-          )
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -131,7 +98,7 @@ class _ParentRoutinesScreenState extends State<ParentRoutinesScreen> {
                         hintText: 'Ex: Escovar os dentes',
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 8),
                     Row(
                       children: [
                         Expanded(
@@ -152,34 +119,15 @@ class _ParentRoutinesScreenState extends State<ParentRoutinesScreen> {
                               setState(() => _time = picked);
                             }
                           },
-                        ),
+                        )
                       ],
                     ),
-                    const SizedBox(height: 10),
                     ElevatedButton(
                       onPressed: _addRoutine,
                       child: const Text('Adicionar rotina'),
                     ),
                   ],
                 ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            Expanded(
-              child: ListView.builder(
-                itemCount: routines.length,
-                itemBuilder: (context, i) {
-                  final r = routines[i];
-                  return Card(
-                    child: ListTile(
-                      leading: const Icon(Icons.alarm),
-                      title: Text(r['title']),
-                      subtitle: Text(
-                        'Horário: ${r['hour']}:${r['minute'].toString().padLeft(2, '0')}',
-                      ),
-                    ),
-                  );
-                },
               ),
             ),
           ],
