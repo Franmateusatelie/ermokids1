@@ -41,7 +41,8 @@ class _ParentRoutinesScreenState extends State<ParentRoutinesScreen> {
   Future<void> _save() async {
     final p = await SharedPreferences.getInstance();
     final list = routines
-        .map((r) => '${r['title']}|${r['hour']}|${r['minute']}')
+        .map((r) =>
+            '${r['title'] as String}|${r['hour'] as int}|${r['minute'] as int}')
         .toList();
     await p.setStringList('routines_v3', list);
   }
@@ -71,7 +72,7 @@ class _ParentRoutinesScreenState extends State<ParentRoutinesScreen> {
     NotificationService.scheduleInApp(
       id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
       title: '⏰ Hora da rotina',
-      body: routine['title'],
+      body: routine['title'] as String,
       dateTime: dateTime,
     );
 
@@ -150,9 +151,9 @@ class _ParentRoutinesScreenState extends State<ParentRoutinesScreen> {
                   return Card(
                     child: ListTile(
                       leading: const Icon(Icons.alarm),
-                      title: Text(r['title']),
+                      title: Text(r['title'] as String),
                       subtitle: Text(
-                        'Horário: ${r['hour']}:${r['minute'].toString().padLeft(2, '0')}',
+                        'Horário: ${(r['hour'] as int).toString().padLeft(2, '0')}:${(r['minute'] as int).toString().padLeft(2, '0')}',
                       ),
                     ),
                   );
@@ -165,6 +166,7 @@ class _ParentRoutinesScreenState extends State<ParentRoutinesScreen> {
     );
   }
 }
+
 
 
 
