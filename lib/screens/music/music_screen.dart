@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 
@@ -8,8 +9,11 @@ class MusicScreen extends StatefulWidget {
   State<MusicScreen> createState() => _MusicScreenState();
 }
 
-class _MusicScreenState extends State<MusicScreen> {
+class _MusicScreenState extends State<MusicScreen>
+    with SingleTickerProviderStateMixin {
   final AudioPlayer _player = AudioPlayer();
+  late AnimationController _anim;
+
   int _index = 0;
   bool _playing = false;
 
@@ -23,7 +27,12 @@ class _MusicScreenState extends State<MusicScreen> {
   void initState() {
     super.initState();
 
-    /// 🔁 quando a música terminar → toca a próxima
+    _anim = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+
+    /// quando acabar a música → próxima
     _player.onPlayerComplete.listen((event) {
       _next(auto: true);
     });
@@ -31,6 +40,7 @@ class _MusicScreenState extends State<MusicScreen> {
 
   @override
   void dispose() {
+    _anim.dispose();
     _player.dispose();
     super.dispose();
   }
@@ -40,21 +50,20 @@ class _MusicScreenState extends State<MusicScreen> {
     await _player.play(
       AssetSource(_musics[_index]['file']!),
     );
+    _anim.repeat();
     setState(() => _playing = true);
   }
 
   Future<void> _pause() async {
     await _player.pause();
+    _anim.stop();
     setState(() => _playing = false);
   }
 
   void _next({bool auto = false}) {
     _index = (_index + 1) % _musics.length;
     _play();
-
-    if (!auto) {
-      setState(() {});
-    }
+    if (!auto) setState(() {});
   }
 
   void _previous() {
@@ -74,11 +83,38 @@ class _MusicScreenState extends State<MusicScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          AnimatedBuilder(
+            animation: _anim,
+            builder: (context, _) {
+              return Stack(
+                alignment: Alignment.center,
+                children: List.generate(8, (i) {
+                  final angle = (i / 8) * 2 * pi;
+                  final radius = 60 + (_anim.value * 20);
+                  return Transform.translate(
+                    offset: Offset(
+                      cos(angle) * radius,
+                      sin(angle) * radius,
+                    ),
+                    child: Icon(
+                      Icons.music_note,
+                      color: Colors.primaries[i % Colors.primaries.length],
+                      size: 24,
+                    ),
+                  );
+                }),
+              );
+            },
+          ),
+
+          const SizedBox(height: 30),
+
           const Icon(
-            Icons.music_note,
-            size: 100,
+            Icons.child_friendly,
+            size: 80,
             color: Colors.deepPurple,
           ),
+
           const SizedBox(height: 20),
 
           Text(
@@ -121,5 +157,6 @@ class _MusicScreenState extends State<MusicScreen> {
     );
   }
 }
+
 
 
