@@ -26,4 +26,5 @@ flutter:
 
   assets:
     - assets/images/logo.png
-    - assets/audio/intro.mp3
+    - assets/video/splash.mp4
+
