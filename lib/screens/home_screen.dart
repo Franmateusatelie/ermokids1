@@ -12,38 +12,6 @@ class HomeScreen extends StatelessWidget {
     await _player.play(AssetSource('music/click.mp3'));
   }
 
-  Widget glowButton({
-    required BuildContext context,
-    required String image,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: () async {
-        await playClick();
-        onTap();
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.yellow.withOpacity(0.7),
-              blurRadius: 25,
-              spreadRadius: 5,
-            ),
-          ],
-        ),
-        child: Image.asset(
-          image,
-          width: 260,
-        ),
-      ),
-    );
-  }
-
   Widget img(String path, {double? width, BoxFit fit = BoxFit.contain}) {
     return Image.asset(
       path,
@@ -91,13 +59,12 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
 
-                // BOTÕES COM SOM + LUZ
+                // BOTÕES (SEM EFEITO)
                 Column(
                   children: [
-                    glowButton(
-                      context: context,
-                      image: 'assets/images/btn_crianca.png',
-                      onTap: () {
+                    GestureDetector(
+                      onTap: () async {
+                        await playClick();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -105,14 +72,17 @@ class HomeScreen extends StatelessWidget {
                           ),
                         );
                       },
+                      child: img(
+                        'assets/images/btn_crianca.png',
+                        width: 260,
+                      ),
                     ),
 
-                    const SizedBox(height: 28),
+                    const SizedBox(height: 24),
 
-                    glowButton(
-                      context: context,
-                      image: 'assets/images/btn_pais.png',
-                      onTap: () {
+                    GestureDetector(
+                      onTap: () async {
+                        await playClick();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -120,6 +90,10 @@ class HomeScreen extends StatelessWidget {
                           ),
                         );
                       },
+                      child: img(
+                        'assets/images/btn_pais.png',
+                        width: 260,
+                      ),
                     ),
                   ],
                 ),
@@ -145,6 +119,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
 
 
 
