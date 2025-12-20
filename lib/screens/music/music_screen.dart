@@ -17,6 +17,9 @@ class _MusicScreenState extends State<MusicScreen> {
     {'title': 'Música Feliz', 'file': 'music/musica1.mp3'},
     {'title': 'Hora de Brincar', 'file': 'music/musica2.mp3'},
     {'title': 'Canção Alegre', 'file': 'music/musica3.mp3'},
+    {'title': 'Especial', 'file': 'music/musica4.mp3'},
+    {'title': 'Animada', 'file': 'music/musica5.mp3'},
+    {'title': 'Alegria', 'file': 'music/musica6.mp3'},
   ];
 
   @override
