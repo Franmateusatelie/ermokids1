@@ -6,6 +6,7 @@ import 'modules/kid_math_screen.dart';
 import 'modules/kid_portuguese_screen.dart';
 import 'modules/kid_dino_egg_screen.dart';
 import 'modules/kid_letters_screen.dart';
+import 'modules/kid_values_screen.dart';
 
 class KidHomeScreen extends StatelessWidget {
   const KidHomeScreen({super.key});
@@ -47,6 +48,14 @@ class KidHomeScreen extends StatelessWidget {
             ),
           ),
           _MenuButton(
+            icon: Icons.eco,
+            label: 'Valores',
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const KidValuesScreen()),
+            ),
+          ),
+          _MenuButton(
             icon: Icons.palette,
             label: 'Pintar',
             onTap: () => Navigator.push(
@@ -55,19 +64,19 @@ class KidHomeScreen extends StatelessWidget {
             ),
           ),
           _MenuButton(
-            icon: Icons.music_note,
-            label: 'Músicas',
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const MusicScreen()),
-            ),
-          ),
-          _MenuButton(
             icon: Icons.egg_alt,
             label: 'Ovinho do Dino',
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const KidDinoEggScreen()),
+            ),
+          ),
+          _MenuButton(
+            icon: Icons.music_note,
+            label: 'Músicas',
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const MusicScreen()),
             ),
           ),
         ],
@@ -112,6 +121,7 @@ class _MenuButton extends StatelessWidget {
     );
   }
 }
+
 
 
 
