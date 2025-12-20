@@ -9,7 +9,7 @@ import 'modules/kid_portuguese_screen.dart';
 import 'modules/kid_letters_screen.dart';
 import 'modules/kid_values_screen.dart';
 
-// 🐶🐱 Pet
+// 🐶🐱 PET
 import '../pet/pet_select_screen.dart';
 
 class KidHomeScreen extends StatefulWidget {
@@ -74,7 +74,7 @@ class _KidHomeScreenState extends State<KidHomeScreen> {
           _btn(context, Icons.music_note, 'Músicas 🎵',
               const MusicScreen()),
 
-          // 🐶🐱 PET VIRTUAL
+          // 🐾 BOTÃO DO PET (OBRIGATÓRIO)
           _btn(context, Icons.pets, 'Meu Amiguinho 🐾',
               const PetSelectScreen()),
         ],
@@ -116,6 +116,7 @@ class _KidHomeScreenState extends State<KidHomeScreen> {
     );
   }
 }
+
 
 
 
