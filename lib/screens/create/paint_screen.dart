@@ -10,8 +10,7 @@ class PaintScreen extends StatefulWidget {
 class _PaintScreenState extends State<PaintScreen> {
   List<Offset?> points = [];
   Color selectedColor = Colors.red;
-  double strokeWidth = 6.0;
-  bool showTemplate = true;
+  String template = '⭐';
 
   final List<Color> colors = [
     Colors.red,
@@ -24,31 +23,53 @@ class _PaintScreenState extends State<PaintScreen> {
     Colors.black,
   ];
 
+  final List<String> templates = ['⭐', '🐶', '🚗'];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFFF8E1),
       appBar: AppBar(
-        title: const Text('🎨 Pintar e Desenhar'),
+        title: const Text('🎨 Pintar Desenhos'),
         actions: [
           IconButton(
-            tooltip: 'Limpar',
             icon: const Icon(Icons.delete),
-            onPressed: () {
-              setState(() => points.clear());
-            },
-          ),
-          IconButton(
-            tooltip: 'Molde',
-            icon: Icon(showTemplate ? Icons.visibility : Icons.visibility_off),
-            onPressed: () {
-              setState(() => showTemplate = !showTemplate);
-            },
+            onPressed: () => setState(() => points.clear()),
           ),
         ],
       ),
       body: Column(
         children: [
+          // Escolher molde
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: templates.map((t) {
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      template = t;
+                      points.clear();
+                    });
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 6),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: template == t
+                          ? Colors.orangeAccent
+                          : Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.black26),
+                    ),
+                    child: Text(t, style: const TextStyle(fontSize: 28)),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+
           // Área de desenho
           Expanded(
             child: Container(
@@ -70,11 +91,10 @@ class _PaintScreenState extends State<PaintScreen> {
                 },
                 onPanEnd: (_) => points.add(null),
                 child: CustomPaint(
-                  painter: _PaintPainter(
+                  painter: _Painter(
                     points: points,
                     color: selectedColor,
-                    strokeWidth: strokeWidth,
-                    showTemplate: showTemplate,
+                    template: template,
                   ),
                   child: Container(),
                 ),
@@ -84,7 +104,7 @@ class _PaintScreenState extends State<PaintScreen> {
 
           // Paleta de cores
           SizedBox(
-            height: 80,
+            height: 70,
             child: ListView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -92,9 +112,9 @@ class _PaintScreenState extends State<PaintScreen> {
                 return GestureDetector(
                   onTap: () => setState(() => selectedColor = c),
                   child: Container(
-                    width: 50,
-                    height: 50,
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    width: 45,
+                    height: 45,
+                    margin: const EdgeInsets.symmetric(horizontal: 6),
                     decoration: BoxDecoration(
                       color: c,
                       shape: BoxShape.circle,
@@ -110,73 +130,49 @@ class _PaintScreenState extends State<PaintScreen> {
               }).toList(),
             ),
           ),
-
-          const SizedBox(height: 10),
-
-          // Espessura
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('Fino'),
-              Slider(
-                value: strokeWidth,
-                min: 3,
-                max: 12,
-                divisions: 3,
-                onChanged: (v) {
-                  setState(() => strokeWidth = v);
-                },
-              ),
-              const Text('Grosso'),
-            ],
-          ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 8),
         ],
       ),
     );
   }
 }
 
-class _PaintPainter extends CustomPainter {
+class _Painter extends CustomPainter {
   final List<Offset?> points;
   final Color color;
-  final double strokeWidth;
-  final bool showTemplate;
+  final String template;
 
-  _PaintPainter({
+  _Painter({
     required this.points,
     required this.color,
-    required this.strokeWidth,
-    required this.showTemplate,
+    required this.template,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
+    // Molde
+    final tp = TextPainter(
+      text: TextSpan(
+        text: template,
+        style: const TextStyle(fontSize: 200),
+      ),
+      textDirection: TextDirection.ltr,
+    );
+    tp.layout();
+    tp.paint(
+      canvas,
+      Offset(
+        (size.width - tp.width) / 2,
+        (size.height - tp.height) / 2,
+      ),
+    );
+
+    // Desenho
     final paint = Paint()
       ..color = color
       ..strokeCap = StrokeCap.round
-      ..strokeWidth = strokeWidth;
+      ..strokeWidth = 6;
 
-    // Molde (estrela grande)
-    if (showTemplate) {
-      final textPainter = TextPainter(
-        text: const TextSpan(
-          text: '⭐',
-          style: TextStyle(fontSize: 200),
-        ),
-        textDirection: TextDirection.ltr,
-      );
-      textPainter.layout();
-      textPainter.paint(
-        canvas,
-        Offset(
-          (size.width - textPainter.width) / 2,
-          (size.height - textPainter.height) / 2,
-        ),
-      );
-    }
-
-    // Desenho
     for (int i = 0; i < points.length - 1; i++) {
       if (points[i] != null && points[i + 1] != null) {
         canvas.drawLine(points[i]!, points[i + 1]!, paint);
@@ -187,3 +183,4 @@ class _PaintPainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
+
