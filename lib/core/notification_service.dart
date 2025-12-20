@@ -29,17 +29,15 @@ class NotificationService {
       priority: Priority.high,
     );
 
-    await _plugin.zonedSchedule(
+    await _plugin.schedule(
       id,
       title,
       body,
       dateTime,
       const NotificationDetails(android: androidDetails),
       androidAllowWhileIdle: true,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.time,
     );
   }
 }
+
 
