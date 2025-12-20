@@ -8,57 +8,65 @@ class RoleSelectScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
-        fit: StackFit.expand,
         children: [
-          // 🌈 FUNDO
-          Image.asset(
-            'assets/images/background_abc.png',
-            fit: BoxFit.cover,
+          // 🔹 FUNDO
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/background_abc.png',
+              fit: BoxFit.cover,
+            ),
           ),
 
-          // CONTEÚDO
+          // 🔹 CAMADA SUAVE (para leitura melhor)
+          Positioned.fill(
+            child: Container(
+              color: Colors.white.withOpacity(0.25),
+            ),
+          ),
+
           SafeArea(
-            child: Center(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 20),
+            child: Column(
+              children: [
+                const SizedBox(height: 16),
 
-                    // 🧸 LOGO TOPO
-                    Image.asset(
-                      'assets/images/logo_ermokids.png',
-                      width: 220,
-                    ),
-
-                    const SizedBox(height: 40),
-
-                    // 👶 BOTÃO ÁREA DA CRIANÇA
-                    _imageButton(
-                      context,
-                      image: 'assets/images/btn_crianca.png',
-                      onTap: () async {
-                        await SoundManager.playClick();
-                        Navigator.pushReplacementNamed(context, '/kid');
-                      },
-                    ),
-
-                    const SizedBox(height: 24),
-
-                    // 👨‍👩‍👧 BOTÃO ÁREA DOS PAIS
-                    _imageButton(
-                      context,
-                      image: 'assets/images/btn_pais.png',
-                      onTap: () async {
-                        await SoundManager.playClick();
-                        Navigator.pushReplacementNamed(context, '/parent');
-                      },
-                    ),
-
-                    const SizedBox(height: 40),
-                  ],
+                // 🔹 LOGO TOPO
+                Image.asset(
+                  'assets/images/logo_ermokids.png',
+                  height: 110,
+                  fit: BoxFit.contain,
                 ),
-              ),
+
+                const SizedBox(height: 24),
+
+                // 🔹 BOTÕES
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 28),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _imageButton(
+                          context,
+                          image: 'assets/images/btn_area_crianca.png',
+                          onTap: () async {
+                            await SoundManager.playClick();
+                            Navigator.pushReplacementNamed(context, '/kid');
+                          },
+                        ),
+                        const SizedBox(height: 24),
+                        _imageButton(
+                          context,
+                          image: 'assets/images/btn_area_pais.png',
+                          onTap: () async {
+                            await SoundManager.playClick();
+                            Navigator.pushReplacementNamed(context, '/parent');
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -71,22 +79,32 @@ class RoleSelectScreen extends StatelessWidget {
     required String image,
     required VoidCallback onTap,
   }) {
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(24),
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.75,
-        constraints: const BoxConstraints(
-          maxWidth: 360,
+        height: 130,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(28),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.25),
+              blurRadius: 10,
+              offset: const Offset(0, 6),
+            ),
+          ],
         ),
-        child: Image.asset(
-          image,
-          fit: BoxFit.contain,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(28),
+          child: Image.asset(
+            image,
+            fit: BoxFit.cover,
+          ),
         ),
       ),
     );
   }
 }
+
 
 
 
