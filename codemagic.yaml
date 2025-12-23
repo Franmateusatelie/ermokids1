@@ -1,16 +1,25 @@
 workflows:
   ermokids_android_build:
-    name: ErmoKids Android Build (Free)
+    name: ErmoKids Android Build
     max_build_duration: 60
 
     environment:
-      node: 20
+      node: latest
       java: 17
 
     scripts:
+      - name: Check Node version
+        script: |
+          node -v
+          npm -v
+
       - name: Install dependencies
         script: |
           npm install
+
+      - name: Install Capacitor CLI (compatible)
+        script: |
+          npm install -D @capacitor/cli@latest
 
       - name: Build web
         script: |
@@ -28,5 +37,4 @@ workflows:
 
     artifacts:
       - android/app/build/outputs/**/*.apk
-
 
