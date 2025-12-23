@@ -1,11 +1,11 @@
 workflows:
-  android-workflow:
-    name: ErmoKids Android Build
+  ermokids_android_build:
+    name: ErmoKids Android Build (Free)
     max_build_duration: 60
-    instance_type: linux
     environment:
       node: 18
       java: 17
+
     scripts:
       - name: Install dependencies
         script: |
@@ -27,3 +27,4 @@ workflows:
 
     artifacts:
       - android/app/build/outputs/**/*.apk
+
