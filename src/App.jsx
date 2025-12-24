@@ -1,24 +1,14 @@
-import { useEffect } from "react";
+import './App.css'
+import Pages from "@/pages/index.jsx"
+import { Toaster } from "@/components/ui/toaster"
 
-export default function App() {
-  useEffect(() => {
-    document.body.style.margin = "0";
-    document.body.style.padding = "0";
-    document.body.style.overflow = "hidden";
-  }, []);
-
+function App() {
   return (
-    <iframe
-      title="ErmoKids App"
-      src="https://aventura-petandia-copy-76f74cfd.base44.app"
-      style={{
-        border: "none",
-        width: "100vw",
-        height: "100vh",
-      }}
-      allow="autoplay; fullscreen"
-    />
-  );
+    <>
+      <Pages />
+      <Toaster />
+    </>
+  )
 }
 
-
+export default App 
