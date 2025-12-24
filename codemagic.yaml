@@ -1,22 +1,16 @@
 workflows:
   android-release:
-    name: Android Release
+    name: Android Release (AAB)
     max_build_duration: 60
     environment:
       flutter: stable
-      vars:
-        PACKAGE_NAME: "com.ermotech.ermokids"
     scripts:
-      - name: Get Flutter packages
+      - name: Flutter pub get
         script: |
           flutter pub get
 
-      - name: Build AAB
+      - name: Build Android App Bundle
         script: |
           flutter build appbundle --release
     artifacts:
       - build/**/outputs/**/*.aab
-    publishing:
-      email:
-        recipients:
-          - hclinformatica2025@gmail.com
